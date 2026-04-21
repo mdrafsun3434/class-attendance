@@ -187,39 +187,31 @@
             }
         }
 
-      function downloadPDF() {
-    const element = document.getElementById('recordTable');
-    const selectedSubject = document.getElementById('filterSubject').value;
+        function downloadPDF() {
+            const element = document.getElementById('recordTable'); 
+            const selectedSubject = document.getElementById('filterSubject').value;
 
-    if (!element) {
-        alert("টেবিলটি খুঁজে পাওয়া যায়নি!");
-        return;
-    }
+            if (!element) {
+                alert("টেবিলটি খুঁজে পাওয়া যায়নি!");
+                return;
+            }
 
-    // PDF তৈরির আগে টেবিলের টেক্সট কালার কালো করে দিচ্ছি যাতে সাদা কাগজে দেখা যায়
-    element.style.color = "black";
-    const deleteButtons = document.querySelectorAll('.btn-delete');
-    deleteButtons.forEach(btn => btn.style.display = 'none'); // PDF এ ডিলিট বাটন হাইড করা
+            const fileName = `Attendance_${selectedSubject}.pdf`;
 
-    const fileName = `Attendance_${selectedSubject}.pdf`;
+            const opt = {
+                margin: [10, 5, 10, 5],
+                filename: fileName,
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { 
+                    scale: 2, 
+                    useCORS: true, 
+                    backgroundColor: "#16213e" 
+                },
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
 
-    const opt = {
-        margin: [10, 10, 10, 10],
-        filename: fileName,
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { 
-            scale: 2, 
-            backgroundColor: "#ffffff" // PDF এর ব্যাকগ্রাউন্ড সাদা করা হলো
-        },
-        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-    };
-
-    html2pdf().set(opt).from(element).save().then(() => {
-        // PDF ডাউনলোড হয়ে গেলে আবার আগের মতো ডার্ক মোড স্টাইল ফিরিয়ে আনা
-        element.style.color = "white";
-        deleteButtons.forEach(btn => btn.style.display = 'inline-block');
-    });
-}
+            html2pdf().set(opt).from(element).save();
+        }
     </script>
 </body>
 </html>
