@@ -22,6 +22,23 @@
             color: white;
             padding: 20px;
         }
+        /* এই অংশটুকু আপনার স্টাইল শিটে যোগ করুন বা পরিবর্তন করুন */
+.glass-card {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 20px;
+    padding: 40px;
+    width: 100%;
+    max-width: 600px; /* টেবিলের জন্য একটু বাড়িয়ে দিলাম */
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+    text-align: center;
+    
+    /* নিচের ৩টি লাইন যোগ করুন */
+    max-height: 90vh; /* স্ক্রিনের ৯০% উচ্চতা নিবে */
+    overflow-y: auto; /* ডাটা বেশি হলে স্ক্রলবার আসবে */
+    margin: 20px auto;
+}
         .glass-card {
             background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(15px);
@@ -150,7 +167,7 @@
 
         function loadAdminData() {
             const password = prompt("পাসওয়ার্ড দিন:");
-            if (password === "Rafsun") {
+            if (password === "1") {
                 document.getElementById('adminPanel').style.display = "block";
                 database.ref('attendance/').on('value', (snapshot) => {
                     allData = snapshot.val() || {};
