@@ -12,6 +12,7 @@
     
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
+        
         body {
             background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
             min-height: 100vh;
@@ -20,51 +21,42 @@
             align-items: center;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             color: white;
-            padding: 20px;
+            padding: 10px; /* মোবাইলের জন্য প্যাডিং কমানো হয়েছে */
         }
-        /* এই অংশটুকু আপনার স্টাইল শিটে যোগ করুন বা পরিবর্তন করুন */
-.glass-card {
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(15px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 20px;
-    padding: 40px;
-    width: 100%;
-    max-width: 600px; /* টেবিলের জন্য একটু বাড়িয়ে দিলাম */
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
-    text-align: center;
-    
-    /* নিচের ৩টি লাইন যোগ করুন */
-    max-height: 90vh; /* স্ক্রিনের ৯০% উচ্চতা নিবে */
-    overflow-y: auto; /* ডাটা বেশি হলে স্ক্রলবার আসবে */
-    margin: 20px auto;
-}
+
         .glass-card {
             background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(15px);
             border: 1px solid rgba(255, 255, 255, 0.2);
             border-radius: 20px;
-            padding: 40px;
+            padding: 25px;
             width: 100%;
-            max-width: 500px;
+            max-width: 650px;
             box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
             text-align: center;
+            max-height: 95vh;
+            overflow-y: auto;
         }
+
+        h2 { margin-bottom: 15px; font-size: 1.5rem; }
+
         select, input {
             width: 100%;
             padding: 12px;
-            margin: 10px 0;
+            margin: 8px 0;
             border-radius: 10px;
             border: 1px solid rgba(255, 255, 255, 0.3);
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(255, 255, 255, 0.1);
             color: white;
             outline: none;
+            font-size: 16px; /* মোবাইলে জুম হওয়া আটকাতে */
         }
         select option { background: #16213e; color: white; }
+        
         button {
             width: 100%;
             padding: 14px;
-            margin-top: 20px;
+            margin-top: 10px;
             border: none;
             border-radius: 10px;
             background: linear-gradient(45deg, #00d2ff, #3a7bd5);
@@ -72,14 +64,40 @@
             font-weight: bold;
             cursor: pointer;
             transition: 0.3s;
+            font-size: 1rem;
         }
         button:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0, 210, 255, 0.4); }
+
         .admin-link { margin-top: 25px; font-size: 13px; color: rgba(255, 255, 255, 0.4); cursor: pointer; text-decoration: underline; }
+        
         #adminPanel { display: none; margin-top: 30px; border-top: 1px solid rgba(255, 255, 255, 0.2); padding-top: 20px; }
-        table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 13px; }
-        th, td { padding: 10px; border: 1px solid rgba(255, 255, 255, 0.1); text-align: center; }
-        th { background: rgba(255, 255, 255, 0.1); color: #00d2ff; }
-        .btn-delete { background: #ff4d4d; color: white; border: none; padding: 5px 8px; border-radius: 5px; cursor: pointer; }
+        
+        /* টেবিল রেসপন্সিভ কন্টেইনার */
+        .table-container {
+            width: 100%;
+            overflow-x: auto; /* মোবাইলে টেবিল ডানে-বামে স্ক্রল হবে */
+            margin-top: 15px;
+            border-radius: 10px;
+        }
+
+        table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            font-size: 13px; 
+            min-width: 450px; /* টেবিল যেন একদম ছোট না হয়ে যায় */
+        }
+
+        th, td { padding: 12px 8px; border: 1px solid rgba(255, 255, 255, 0.1); text-align: center; }
+        th { background: rgba(255, 255, 255, 0.2); color: #00d2ff; }
+        
+        .btn-delete { background: #ff4d4d; color: white; border: none; padding: 6px 10px; border-radius: 5px; cursor: pointer; }
+
+        /* ছোট স্ক্রিনের জন্য বিশেষ সেটিংস */
+        @media (max-width: 480px) {
+            .glass-card { padding: 15px; }
+            h2 { font-size: 1.2rem; }
+            th, td { padding: 8px 4px; font-size: 12px; }
+        }
     </style>
 </head>
 
@@ -100,7 +118,7 @@
         <input type="number" id="rollInput" placeholder="আপনার রোল নম্বর দিন">
         <button onclick="submitAttendance()">SUBMIT PRESENT</button>
 
-        <p class="admin-link" onclick="loadAdminData()">Admin Login (For You Only)</p>
+        <p class="admin-link" onclick="loadAdminData()">Admin Login</p>
 
         <div id="adminPanel">
             <h3>Attendance Records</h3>
@@ -115,24 +133,26 @@
                 <option value="Accounting">Accounting</option>
             </select>
             
-            <button onclick="downloadPDF()" style="background: #28a745; margin-bottom: 10px; width: auto; padding: 10px 20px;">Download PDF</button>
+            <button onclick="downloadPDF()" style="background: #28a745; margin-bottom: 15px; width: auto; padding: 10px 20px;">Download PDF</button>
 
-            <table id="recordTable">
-                <thead>
-                    <tr>
-                        <th>Roll</th>
-                        <th>Subject</th>
-                        <th>Time</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody id="tableBody"></tbody>
-            </table>
+            <div class="table-container">
+                <table id="recordTable">
+                    <thead>
+                        <tr>
+                            <th>Roll</th>
+                            <th>Subject</th>
+                            <th>Time</th>
+                            <th class="action-column">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody"></tbody>
+                </table>
+            </div>
         </div>
     </div>
 
     <script>
-        // --- আপনার FIREBASE CONFIG ---
+        // Firebase Configuration
         const firebaseConfig = {
             apiKey: "AIzaSyAKHZMyToMP2YfzssI_OqU1R6uALTTP-E",
             authDomain: "myattendancesystem-5cb1b.firebaseapp.com",
@@ -173,70 +193,58 @@
                     allData = snapshot.val() || {};
                     updateTableUI();
                 });
-                alert("লগইন সফল!");
             } else { alert("ভুল পাসওয়ার্ড!"); }
         }
 
         function updateTableUI() {
             const tableBody = document.getElementById('tableBody');
             const selectedFilter = document.getElementById('filterSubject').value;
-            tableBody.innerHTML = "";
+            let rows = "";
 
-            Object.keys(allData).forEach((key) => {
+            // .reverse() ব্যবহার করা হয়েছে যাতে নতুন এন্ট্রিগুলো উপরে থাকে
+            Object.keys(allData).reverse().forEach((key) => {
                 const data = allData[key];
                 if (selectedFilter === "All" || data.subject === selectedFilter) {
-                    let row = `<tr>
+                    rows += `<tr>
                         <td>${data.roll}</td>
                         <td>${data.subject}</td>
                         <td>${data.timestamp}</td>
-                        <td><button class="btn-delete" onclick="deleteRecord('${key}')">Delete</button></td>
+                        <td class="action-column"><button class="btn-delete" onclick="deleteRecord('${key}')">Delete</button></td>
                     </tr>`;
-                    tableBody.innerHTML += row;
                 }
             });
+            tableBody.innerHTML = rows;
         }
 
         function deleteRecord(id) {
             if (confirm("আপনি কি নিশ্চিত?")) {
-                database.ref('attendance/' + id).remove()
-                .then(() => alert("ডিলিট হয়েছে!"))
-                .catch((err) => console.error(err));
+                database.ref('attendance/' + id).remove();
             }
         }
 
-      function downloadPDF() {
-    const element = document.getElementById('recordTable');
-    const selectedSubject = document.getElementById('filterSubject').value;
+        function downloadPDF() {
+            const element = document.getElementById('recordTable');
+            const selectedSubject = document.getElementById('filterSubject').value;
 
-    if (!element) {
-        alert("টেবিলটি খুঁজে পাওয়া যায়নি!");
-        return;
-    }
+            // PDF তৈরির আগে ডার্ক মোড থেকে লাইট মোড কাস্টমাইজেশন
+            element.style.color = "black";
+            const actions = document.querySelectorAll('.action-column');
+            actions.forEach(el => el.style.display = 'none'); // Action কলাম মুছে ফেলা
 
-    // PDF তৈরির আগে টেবিলের টেক্সট কালার কালো করে দিচ্ছি যাতে সাদা কাগজে দেখা যায়
-    element.style.color = "black";
-    const deleteButtons = document.querySelectorAll('.btn-delete');
-    deleteButtons.forEach(btn => btn.style.display = 'none'); // PDF এ ডিলিট বাটন হাইড করা
+            const opt = {
+                margin: 10,
+                filename: `Attendance_${selectedSubject}.pdf`,
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2, backgroundColor: "#ffffff" },
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
 
-    const fileName = `Attendance_${selectedSubject}.pdf`;
-
-    const opt = {
-        margin: [10, 10, 10, 10],
-        filename: fileName,
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { 
-            scale: 2, 
-            backgroundColor: "#ffffff" // PDF এর ব্যাকগ্রাউন্ড সাদা করা হলো
-        },
-        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-    };
-
-    html2pdf().set(opt).from(element).save().then(() => {
-        // PDF ডাউনলোড হয়ে গেলে আবার আগের মতো ডার্ক মোড স্টাইল ফিরিয়ে আনা
-        element.style.color = "white";
-        deleteButtons.forEach(btn => btn.style.display = 'inline-block');
-    });
-}
+            html2pdf().set(opt).from(element).save().then(() => {
+                // ডাউনলোড শেষ হলে বাটন এবং কালার ফিরিয়ে আনা
+                element.style.color = "white";
+                actions.forEach(el => el.style.display = 'table-cell');
+            });
+        }
     </script>
 </body>
 </html>
