@@ -187,7 +187,7 @@
 
         function loadAdminData() {
             const password = prompt("পাসওয়ার্ড দিন:");
-            if (password === "1") {
+            if (password === "Rafsun") {
                 document.getElementById('adminPanel').style.display = "block";
                 database.ref('attendance/').on('value', (snapshot) => {
                     allData = snapshot.val() || {};
